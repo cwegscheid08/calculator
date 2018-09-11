@@ -1,14 +1,7 @@
 var container = document.getElementById("container");
 var output = document.getElementById("output");
+
 var anchor = document.querySelectorAll("a");
-var button = document.getElementById("button");
-
-
-
-
-
-
-
 var enter = document.querySelector(".enter");
 var clear = document.querySelector(".clear");
 var displayValue = [0];
@@ -24,25 +17,21 @@ for (let key in anchor) {
 
 function operate(number) {
     console.log(number);
-
     for (let key in number) {
         if (number[key] == "+") {
 
-            return add(number[+key - 1], number[+key + 1]);
+            number[+key+1] = add(number[+key - 1], number[+key + 1]);
         } else if (number[key] == "-") {
 
-            return subtract(number[+key - 1], number[+key + 1]);
+            number[+key+1] = subtract(number[+key - 1], number[+key + 1]);
         } else if (number[key] == "*") {
 
-            return multiply(number[+key - 1], number[+key + 1]);
+            number[+key+1] = multiply(number[+key - 1], number[+key + 1]);
         } else if (number[key] == "/") {
-
-            return divide(number[+key - 1], number[+key + 1]);
-        } else if (number[0] == 0) {
-            delete number[0];
+            number[+key+1] = divide(number[+key - 1], number[+key + 1]);
         }
     }
-    ;function add(x, y) {
+    function add(x, y) {
         const addNum = +x + +y;
         return addNum;
     }
@@ -61,38 +50,28 @@ function operate(number) {
         const divideNum = +x / +y;
         return divideNum;
     }
-    console.log(functCall);
-    return add(num);
+    return number[number.length-1];
 }
 
 function outputVal(val) {
     var string = output.textContent;
-    var buttonVal = numButton.value;
-
-    if(typeof buttonVal == "number") {
-        console.log(buttonVal);
-    }
-
     let last = string.charAt(string.length - 1);
-
     val = val.text;
 
-    if (output.textContent == "0") {
-        output.textContent = val;
-        displayValue.push(val);
-    } else if (last != ".") {
-        output.textContent += val;
-        displayValue.push(val);
-    } else if (last == "." && val != ".") {
-        output.textContent += val;
-        displayValue.push(val);
+    if (val !== "enter") {
+        if (output.textContent == "0" && val !== "+" && val !== "*" && val !== "/") {
+            output.textContent = val;
+            displayValue.push(val);
+        } else if (last != ".") {
+            output.textContent += val;
+            displayValue.push(val);
+        } else if (last == "." && val != ".") {
+            output.textContent += val;
+            displayValue.push(val);
+        }
     }
-
     return displayValue;
 }
-
-
-
 
 function combineNumbers(num) {
     var numKey = "0123456789";
@@ -102,42 +81,47 @@ function combineNumbers(num) {
     for (let key in num) {
         for (let prop in numKey) {
 
-            if (num[key] == numKey[prop] && +key !== 0 && num[key - 1] !== undefined) {
+            if (num[key] == numKey[prop] && +key !== 0 && num[key - 1] !== undefined || num[key] === ".") {
+                if(num[key-1] === undefined && num[key] === ".") {
+                    num[key] = "0" + num[key];
+                } else if(num[key] === ".") {
+                    num[key] = num[key-1] + num[key];
+                    delete num[key-1];
+                } else {
+                    num[key] = num[key - 1] + num[key];
+                    delete num[key - 1];
+                }
 
-                num[key] = num[key - 1] + num[key];
-                delete num[key - 1];
-
-            } else if (num[key] == "+" || num[key] == "-" || num[key] == "*" || num[key] == "/") {
+            } else if (num[key] == "+" || num[key] == "*" || num[key] == "/" || num[key] == "-") {
                 equation.push(num[+key - 1]);
                 equation.push(num[key]);
+                delete num[key - 1];
                 delete num[key];
-                delete num[key];
-            }
+            } 
+//             else if(key == 0 && num[key] == "-") {
+//                 num[]
+//             }
         }
     }
     equation.push(num.pop());
     return equation;
 }
 
-
-
 clear.addEventListener("click", function() {
     output.textContent = 0;
-    displayValue = [];
+    displayValue = [0];
 })
 
 enter.addEventListener("click", function() {
-    displayValue = displayValue.slice(0, displayValue.length - 1);
-    
-    if(displayValue[0] === 0) {
-        displayValue = displayValue.slice(1, displayValue.length);
-    }
-    
-    
+
+    displayValue = [0, ...output.textContent];
     let newAry = combineNumbers(displayValue);
-    
     let answer = operate(newAry);
     output.textContent = answer;
-    displayValue = [answer];
-    //return operate(displayValue);
+    if (answer === Infinity) {
+        output.textContent = "Nopers.";
+    } else {
+        displayValue = [answer];
+    }
+
 })
