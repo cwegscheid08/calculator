@@ -4,68 +4,82 @@ html {
     margin: 0;
     padding: 0;
     height: 100%;
+    width: 100%;
     display: inline-block;
 }
 
-#container {
-    border: 1px solid black;
-    border-radius: 65px;
-    background-color: lightgray;
+body {
     height: 100%;
-    width: auto;
+    display: flex;
+    justify-content: center;
+}
+
+#container {
+    font-family: 'VT323', monospace;
+    border: 2px solid #424242;
+    border-radius: 65px;
+    background-color: #656565;
+    height: 100%;
+    width: 660px;
     display: grid;
     grid-template-areas: 
         "title title" 
         "output output" 
         "operator num";
     grid-auto-columns: 1fr 3fr;
-    grid-auto-rows: 100px 96px 1fr;
+    grid-auto-rows: 100px 128px 1fr;
+    align-items: center;
+    box-shadow: 17px 20px 48px -5px black;
 }
 
 
 /* OBJECT SETUP */
 #button {
-    width: 124px;
-    height: 133px;
-    font-size: 30px;
+    width: 107px;
+    height: 83px;
+    font-size: 38px;
     border: 1px solid black;
-    background-color: grey;
+    background-color: #c7c7c7;
     display: inline-block;
     justify-self: center;
-    align-self: center;
     text-align: center;
-    border-radius: 62px;
+    border-radius: 15px;
+    margin: 10px 0px;
+    box-shadow: -1px 4px 0px 0px #3c3c3c;
 }
 
 .button {
-    width: 124px;
-    height: 133px;
+    width: 162px;
+    height: 48px;
     font-size: 30px;
     border: 1px solid black;
-    background-color: grey;
+    background-color: #c7c7c7;
     display: inline-block;
     justify-self: center;
     align-self: center;
     text-align: center;
     border-radius: 62px;
+    box-shadow: 0px 5px 0px 0px #3c3c3c;
 }
 
 #head {
     text-align: center;
     font-weight: 100;
-    font-family: sans-serif;
-    font-size: 45px;
+    font-family: 'VT323', monospace;
+    font-size: 90px;
 }
 
 #output {
     font-family: 'VT323', monospace;
-    border: 1px solid black;
+    border: 1px solid #2f2f2f;
     height: 100%;
     width: auto;
     padding: 0;
     margin: 0px 34px;
-    font-size: 100px;
+    font-size: 137px;
     text-align: right;
+    background-color: #7d7862;
+    box-shadow: 0px 4px 0px 0px #2f2f2f;
 }
 
 
@@ -81,9 +95,11 @@ div#function {
         "add subtract"
         "multiply divide"
         "clear clear"
-        "enter enter" ;
+        "enter enter";
     grid-auto-columns: 1fr 1fr;
     grid-auto-rows: 1fr 1fr 1fr;
+    align-self: center;
+    margin: 10px;
 }
 
 div#number-selection {
@@ -92,7 +108,8 @@ div#number-selection {
         "one two three"
         "four five six"
         "seven eight nine"
-        "negative zero decimal" ;
+        "negative zero decimal";
+    align-content: center;
 }
 
 /* TITLE */
@@ -105,7 +122,6 @@ div#title {
 /* OUTPUT */
 #display {
     grid-area: output;
-    text-align: center;
     width: auto;
     height: 100%;
 }
@@ -113,7 +129,6 @@ div#title {
 
 /* FUNCTION SELECTION */
 .function {
-     grid-area: operator;
  }
 
 .add {
@@ -143,7 +158,6 @@ div#title {
 
 /* NUMBER SELECTION */
 .num {
-    grid-area: num;
 }
 
 .one {

@@ -58,6 +58,12 @@ function outputVal(val) {
     let last = string.charAt(string.length - 1);
     val = val.text;
 
+    var search = [...string];
+
+    const find = search.some(char => (char == ".") ? true : false);
+
+    console.log(find);
+
     if (val !== "enter") {
         if (output.textContent == "0" && val !== "+" && val !== "*" && val !== "/") {
             output.textContent = val;
