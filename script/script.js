@@ -7,96 +7,116 @@ var button = document.getElementById("button");
 
 
 
+
+
 var enter = document.querySelector(".enter");
 var clear = document.querySelector(".clear");
 var displayValue = [0];
 var numButton = document.querySelectorAll(".num");
 anchor = Array.from(anchor);
 
-
-
-for(let key in anchor) {
+for (let key in anchor) {
     let btn = anchor[key];
     btn.addEventListener("click", function() {
         outputVal(btn);
     })
 }
 
-
-
-function operate(...number) {
+function operate(number) {
     console.log(number);
 
-    for(let key in number) {
-        
+    for (let key in number) {
+        if (number[key] == "+") {
+
+            return add(number[+key - 1], number[+key + 1]);
+        } else if (number[key] == "-") {
+
+            return subtract(number[+key - 1], number[+key + 1]);
+        } else if (number[key] == "*") {
+
+            return multiply(number[+key - 1], number[+key + 1]);
+        } else if (number[key] == "/") {
+
+            return divide(number[+key - 1], number[+key + 1]);
+        } else if (number[0] == 0) {
+            delete number[0];
+        }
     }
-
-
-
-
-    var functCall = operate.arguments[0];
-    num = [...num];
-
-    if(functCall == "add") {
-        return add(num);
-    } else if(functCall == "subtract") {
-        return subtract(num);
-    } else if(functCall == "multiply") {
-        return multiply(num);
-    } else if (functCall == "divide") {
-        return divide(num);
-    }
-
-    function add() {
-        const addNum = num.reduce((sum,num)=>sum += num);
+    ;function add(x, y) {
+        const addNum = +x + +y;
         return addNum;
     }
 
-    function subtract() {
-        const subtractNum = num.reduce((diff,num)=>diff -= num);
+    function subtract(x, y) {
+        const subtractNum = +x - +y;
         return subtractNum;
     }
 
-    function multiply() {
-        const multiplyNum = num.reduce((prdct,num)=>prdct *= num);
+    function multiply(x, y) {
+        const multiplyNum = +x * +y;
         return multiplyNum;
     }
 
-    function divide() {
-        const divideNum = num.reduce((rslt,num)=>rslt = (rslt / num));
+    function divide(x, y) {
+        const divideNum = +x / +y;
         return divideNum;
     }
     console.log(functCall);
     return add(num);
 }
 
-
-
-
 function outputVal(val) {
     var string = output.textContent;
     var buttonVal = numButton.value;
-    let last = string.charAt(string.length-1);
 
-    
+    if(typeof buttonVal == "number") {
+        console.log(buttonVal);
+    }
+
+    let last = string.charAt(string.length - 1);
+
     val = val.text;
 
-    
-
-    if(output.textContent == "0") {
+    if (output.textContent == "0") {
         output.textContent = val;
         displayValue.push(val);
-    } else if(last != ".") {
+    } else if (last != ".") {
         output.textContent += val;
         displayValue.push(val);
-    } else if(last == "." && val != ".") {
+    } else if (last == "." && val != ".") {
         output.textContent += val;
         displayValue.push(val);
     }
-    
-    
-    
+
     return displayValue;
+}
+
+
+
+
+function combineNumbers(num) {
+    var numKey = "0123456789";
+    numKey = [...numKey];
+    var equation = [];
+
+    for (let key in num) {
+        for (let prop in numKey) {
+
+            if (num[key] == numKey[prop] && +key !== 0 && num[key - 1] !== undefined) {
+
+                num[key] = num[key - 1] + num[key];
+                delete num[key - 1];
+
+            } else if (num[key] == "+" || num[key] == "-" || num[key] == "*" || num[key] == "/") {
+                equation.push(num[+key - 1]);
+                equation.push(num[key]);
+                delete num[key];
+                delete num[key];
+            }
+        }
+    }
+    equation.push(num.pop());
+    return equation;
 }
 
 
@@ -107,6 +127,17 @@ clear.addEventListener("click", function() {
 })
 
 enter.addEventListener("click", function() {
-    displayValue = displayValue.slice(1, displayValue.length - 1);
-    return operate(displayValue);
+    displayValue = displayValue.slice(0, displayValue.length - 1);
+    
+    if(displayValue[0] === 0) {
+        displayValue = displayValue.slice(1, displayValue.length);
+    }
+    
+    
+    let newAry = combineNumbers(displayValue);
+    
+    let answer = operate(newAry);
+    output.textContent = answer;
+    displayValue = [answer];
+    //return operate(displayValue);
 })
