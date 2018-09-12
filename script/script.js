@@ -11,7 +11,7 @@ anchor = Array.from(anchor);
 for (let key in anchor) {
     let btn = anchor[key];
     btn.addEventListener("click", function() {
-        outputVal(btn);
+        outputVal(btn.textContent);
     })
 }
 
@@ -56,26 +56,28 @@ function operate(number) {
 function outputVal(val) {
     var string = output.textContent;
     let last = string.charAt(string.length - 1);
-    val = val.text;
-
-    var search = [...string];
-
-    const find = search.some(char => (char == ".") ? true : false);
-
-    console.log(find);
-
+    
+    var search = [...string, val];
+    
     if (val !== "enter") {
-        if (output.textContent == "0" && val !== "+" && val !== "*" && val !== "/") {
+        if (output.textContent == "0" && val !== "+" && val !== "*" && val !== "/" && val !== "-") {
             output.textContent = val;
             displayValue.push(val);
-        } else if (last != ".") {
+        } else if (val !== "+" && val !== "*" && val !== "/" && val !== "-" && val !== ".") {
             output.textContent += val;
             displayValue.push(val);
-        } else if (last == "." && val != ".") {
+        } else if (val === "." && findSingleDec(search) === false) {
+            output.textContent += val;
+            displayValue.push(val);
+        } else if(val === "-" && findDblNeg(search) === false) {
+            output.textContent += val;
+            displayValue.push(val);
+        } else if(val === "+" || val === "/" || val === "*") {
             output.textContent += val;
             displayValue.push(val);
         }
     }
+
     return displayValue;
 }
 
@@ -99,19 +101,88 @@ function combineNumbers(num) {
                 }
 
             } else if (num[key] == "+" || num[key] == "*" || num[key] == "/" || num[key] == "-") {
-                equation.push(num[+key - 1]);
-                equation.push(num[key]);
+                if(num[key-1] === undefined) {
+                    num[+key+1] = num[key] + num[+key+1]
+                } else {
+                    equation.push(num[+key - 1]);
+                    equation.push(num[key]);
+                }
+                
                 delete num[key - 1];
                 delete num[key];
             } 
-//             else if(key == 0 && num[key] == "-") {
-//                 num[]
-//             }
+
         }
     }
     equation.push(num.pop());
     return equation;
 }
+
+function findDblNeg(ary) {
+    let chckAry = [];
+    let val = ary.pop();
+    console.log(val);
+    for(let i = 0; i <= ary.length; i++) {
+        if(ary[i] == "-") {
+            chckAry.push(i);
+        }
+    }
+
+    const dblChck = chckAry.reduce((x, y) => {
+        if((+y - +x) == 1 && val == "-") {
+            return true;
+        } else {
+            return +y;
+        }
+    }, false)
+    
+    if(+dblChck == +chckAry[chckAry.length-1]) {
+        return false;
+    }
+    return dblChck;
+}
+
+
+function findSingleDec(ary) {
+    let decIndex = [];
+
+    let count;
+    let tf;
+    for (let i = 0; i <= ary.length; i++) {
+        if (ary[i] === ".") {
+            decIndex.push(i);
+        }
+    }
+    
+    let lstPlc = decIndex[decIndex.length-1];
+    
+    let otherIndex = [0];
+    for (let i = 0; i <= ary.length; i++) {
+        if (ary[i] === "+" || ary[i] === "-" || ary[i] === "*" || ary[i] === "/") {
+            otherIndex.push(i);
+        }
+    }
+    otherIndex.push(+lstPlc + 1);
+    for (let key in otherIndex) {
+        count = 0;
+        for (let prop in decIndex) {
+            let dec = decIndex[prop];
+            let other = otherIndex[key];
+            if (dec >= other && dec < otherIndex[+key + 1]) {
+                count++;
+            } 
+        }
+        if (+count >= 2) {
+            tf = true;
+        }
+    }
+    if(tf === undefined) {
+        return false;
+    }
+    return tf;
+}
+
+
 
 clear.addEventListener("click", function() {
     output.textContent = 0;
