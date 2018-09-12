@@ -50,7 +50,20 @@ function operate(number) {
         const divideNum = +x / +y;
         return divideNum;
     }
-    return number[number.length-1];
+    
+    let ans = number[number.length-1];
+    let decChck = ans.toString();
+    decChck = [...decChck];
+    
+    let findDec = decChck.indexOf(".");
+    findDec = +decChck.length - +findDec;
+
+    if(findDec > 5 && decChck.length > 8) {
+        ans = Math.floor(+ans * 1000);
+        ans = (+ans/1000);
+        console.log(ans);
+    }
+    return ans;
 }
 
 function outputVal(val) {
@@ -155,7 +168,7 @@ function findSingleDec(ary) {
     }
     
     let lstPlc = decIndex[decIndex.length-1];
-    
+
     let otherIndex = [0];
     for (let i = 0; i <= ary.length; i++) {
         if (ary[i] === "+" || ary[i] === "-" || ary[i] === "*" || ary[i] === "/") {
